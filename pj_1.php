@@ -95,6 +95,7 @@ foreach ($user_plan as $user_id => $user) {
                     $daily->sendSMS(SMS_NEPLATA_PJ_DATA_1, $user_id);
                     $report[$user_id]['sms_action'] = 'dezactivat';
                     $daily->setSMSStaus($user_id, 'disabled');
+                    $sent_sms++;
                 }
                 break;
             case 'disabled':
