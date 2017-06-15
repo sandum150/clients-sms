@@ -337,12 +337,15 @@ $mail->Subject = MAIL_SUBJECT_PJ_2;
 $mail->Body = $mail_body;
 $mail->AltBody = 'Total SMS trimise catre persoane juridice: ' . $sent_sms;
 
-//if (!$mail->send()) {
-//    echo "Email nu a putut fi trimis. \n";
-//    echo 'Mailer Error: ' . $mail->ErrorInfo;
-//    $daily->errorLog('Mail could not be sent.');
-//} else {
-//    echo "Email cu raport a fost trimis \n";
-//}
 
+if (!MAIL_TEST_MODE) {
+    if (!$mail->send()) {
+        echo "Email nu a putut fi trimis. \n";
+        echo 'Mailer Error: ' . $mail->ErrorInfo;
+        $daily->errorLog('Mail could not be sent.');
+    } else {
+        echo "Email cu raport a fost trimis \n";
+    }
+} else {
     echo $mail_body;
+}
