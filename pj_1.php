@@ -13,6 +13,9 @@ $users = $daily->getUsersList();
 echo "Lista de useri a fost obtinuta \n";
 
 
+$number_of_days_in_month = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
+
+
 $user_plan = [];
 $trackes_by_users = [];
 
@@ -49,12 +52,7 @@ foreach ($trackers as $tracker) {
         $user_plan[$tracker->user_id]['trackers'] = $trackes_by_users[$tracker->user_id];
         $user_plan[$tracker->user_id]['mention'] = $user_object->post_city;
         $user_plan[$tracker->user_id]['mention1'] = $user_object->registered_city;
-        $user_plan[$tracker->user_id]['disabled'] = false;
 
-//        if at least one tracker is blocked
-        if($tracker->source->blocked == true){
-            $user_plan[$tracker->user_id]['disabled'] = true;
-        }
     }
 
 }
@@ -65,7 +63,7 @@ echo "Facem planul userilor fara trackere clonuri. \n";
 echo "Obtinem lista alba de telefoane \n";
 
 $report = [];
-$conturi_plata = 0;
+$sent_sms = 0;
 foreach ($user_plan as $user_id => $user) {
     if ($user['type'] == 'legal_entity') { //legal_entity, individual
 //        $report[$user_id]['sent_sms'] = false;
@@ -78,34 +76,35 @@ foreach ($user_plan as $user_id => $user) {
         $report[$user_id]['mention1'] = $user['mention1'];
         $report[$user_id]['sms_status'] = $daily->getSMSStatus($user_id);
 
-
+//        $number_of_days_in_month
 
 
         $balance_good = $user['has_to_pay'] > $user['balance'] ?  false : true;
 
-
-
-
         switch ($report[$user_id]['sms_status']){
             case 'ok':
-                if($balance_good){
-                    $report[$user_id]['sms_action'] = ' - ';
-                }else{
-                    $conturi_plata++;
-                    $report[$user_id]['sms_action'] = 'cont de plata';
-                }
+                $report[$user_id]['sms_action'] = ' - ';
                 break;
             case 'sent':
-                $daily->errorLog('invalid SMS status in pj.php');
-                $report[$user_id]['sms_action'] = 'status error';
+                if($balance_good){
+//                    set staus to ok
+                    $daily->setSMSStaus($user_id, 'ok');
+                    $report[$user_id]['sms_action'] = 'achitat';
+                }else{
+//                    nothing to do, sms was already sent last days
+                    $daily->sendSMS(SMS_NEPLATA_PJ_DATA_1, $user_id);
+                    $report[$user_id]['sms_action'] = 'dezactivat';
+                    $daily->setSMSStaus($user_id, 'disabled');
+                }
                 break;
-
             case 'disabled':
                 if($balance_good){
-                    $report[$user_id]['sms_action'] = 'achitat';
+//                    set staus to ok
                     $daily->setSMSStaus($user_id, 'ok');
+                    $report[$user_id]['sms_action'] = 'achitat';
                 }else{
-                    $report[$user_id]['sms_action'] = 'inactiv ' . $daily->getSMSDate($user_id);
+//                    nothing to do, sms was already sent last days
+                    $report[$user_id]['sms_action'] = 'inactiv' . $daily->getSMSDate($user_id);
                 }
                 break;
 
@@ -115,19 +114,19 @@ foreach ($user_plan as $user_id => $user) {
                     $daily->setSMSStaus($user_id, 'ok');
                     $report[$user_id]['sms_action'] = ' - ';
                 }else{
-//                    new users also have to pay. Send SMS
-                    $daily->sendSMS(SMS_MESSAGE_PF, $user['phone']);
-                    $conturi_plata++;
-                    $report[$user_id]['sms_action'] = 'cont de plata';
+//                    new users also have to pay. Send SMS and set status to sent
+                    $daily->sendSMS(SMS_NEPLATA_PJ_DATA_1, $user['phone']);
+                    $sent_sms++;
+                    $daily->setSMSStaus($user_id, 'disabled');
+                    $report[$user_id]['sms_action'] = 'dezactivat';
                 }
         }
-
 
     }
 }
 
 
-echo "Total conturi $conturi_plata \n";
+echo "Total SMS trimise $sent_sms \n";
 
 
 ob_start(); ?>
@@ -187,39 +186,39 @@ ob_start(); ?>
                         <td valign="top" align="center">
 
 
-                            <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="table-layout: fixed">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
                                 <tr>
                                     <td align="left" valign="middle"
                                         style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 24px; color: #353535; padding:3%; padding-top:40px; padding-bottom:40px;">
-                                        Raport persoane juridice pentru cont de plata
+                                        Raport lunar persoane juridice dezactivare serciciu
                                     </td>
                                 </tr>
                                 <tr>
                                     <td align="center">
                                         <table width="94%" border="0" cellpadding="0" cellspacing="0" style="table-layout: fixed">
                                             <tr>
-                                                <td align="left" bgcolor="#2B0057"
-                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0; width: 10%">
+                                                <td width="10%" align="left" bgcolor="#4AA908"
+                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0;">
                                                     Client ID
                                                 </td>
-                                                <td align="left" bgcolor="#2B0057"
-                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0; width: 12%">
-                                                    Balanta | tarif/luna
+                                                <td width="15%" align="left" bgcolor="#4AA908"
+                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0;">
+                                                    Balanta
                                                 </td>
-                                                <td align="left" bgcolor="#2B0057"
-                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0; width: 25%">
+                                                <td width="25%" align="left" bgcolor="#4AA908"
+                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0;">
                                                     Trackere
                                                 </td>
-                                                <td align="left" bgcolor="#2B0057"
-                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0; width: 20%">
+                                                <td width="18%" align="left" bgcolor="#4AA908"
+                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0;">
                                                     Mentiuni
                                                 </td>
-                                                <td align="left" bgcolor="#2B0057"
-                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; white-space: nowrap; width: 20%">
+                                                <td width="17%" align="left" bgcolor="#4AA908"
+                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; white-space: nowrap">
                                                     Mentiuni 1
                                                 </td>
-                                                <td align="right" bgcolor="#2B0057"
-                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-left:0; width: 13%">
+                                                <td width="15%" align="right" bgcolor="#4AA908"
+                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-left:0;">
                                                     SMS trimis
                                                 </td>
                                             </tr>
@@ -227,15 +226,15 @@ ob_start(); ?>
 
                                             foreach ($report as $user_id => $user): ?>
                                                 <tr>
-                                                    <td  align="left" bgcolor="#FFFFFF"
+                                                    <td width="10%" align="left" bgcolor="#FFFFFF"
                                                         style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-right:0;">
                                                         <?php echo $user_id; ?>
                                                     </td>
-                                                    <td align="left" bgcolor="#FFFFFF"
+                                                    <td width="10%" align="left" bgcolor="#FFFFFF"
                                                         style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-right:0;">
-                                                        <?php echo $user['balance'] . " | " . $user['has_to_pay']; ?>
+                                                        <?php echo $user['balance']; ?>
                                                     </td>
-                                                    <td align="left" bgcolor="#FFFFFF"
+                                                    <td width="30%" align="left" bgcolor="#FFFFFF"
                                                         style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-right:0;">
                                                         <?php
                                                         $str = '';
@@ -244,15 +243,15 @@ ob_start(); ?>
                                                         }
                                                         echo rtrim($str, '+ ') . ' = ' . $user['has_to_pay']; ?>
                                                     </td>
-                                                    <td align="left" bgcolor="#FFFFFF"
+                                                    <td width="20%" align="left" bgcolor="#FFFFFF"
                                                         style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px;">
                                                         <?php echo $user['mention']; ?>
                                                     </td>
-                                                    <td align="left" bgcolor="#FFFFFF"
+                                                    <td width="20%" align="left" bgcolor="#FFFFFF"
                                                         style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-right:0;">
                                                         <?php echo $user['mention1']; ?>
                                                     </td>
-                                                    <td align="right" bgcolor="#FFFFFF"
+                                                    <td width="10%" align="right" bgcolor="#FFFFFF"
                                                         style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; padding:10px; padding-left:0;">
                                                         <?php echo $user['sms_action']
                                                         ?>
@@ -271,11 +270,11 @@ ob_start(); ?>
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;">
                                                 <td width="20%" align="right" bgcolor="#FFFFFF"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;">
-                                                    <b>Total conturi de plata</b>
+                                                    <b>Total SMS</b>
                                                 </td>
                                                 <td width="20%" align="right" bgcolor="#FFFFFF"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;">
-                                                    <b><?php echo $conturi_plata; ?></b>
+                                                    <b><?php echo $sent_sms; ?></b>
                                                 </td>
                                             </tr>
                                         </table>
@@ -333,18 +332,16 @@ $mail->addReplyTo(MAIL_REPLY_TO, 'Information');
 //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
 $mail->isHTML(true);                                  // Set email format to HTML
 
-$mail->Subject = MAIL_SUBJECT_PJ_1;
+$mail->Subject = MAIL_SUBJECT_PJ_2;
 $mail->Body = $mail_body;
-$mail->AltBody = 'Raport PJ pentru cont de plata: ' . $conturi_plata;
+$mail->AltBody = 'Total SMS trimise catre persoane juridice: ' . $sent_sms;
 
-if(!MAIL_TEST_MODE){
-    if (!$mail->send()) {
-        echo "Email nu a putut fi trimis. \n";
-        echo 'Mailer Error: ' . $mail->ErrorInfo;
-        $daily->errorLog('Mail could not be sent.');
-    } else {
-        echo "Email cu raport a fost trimis \n";
-    }
-}else{
+//if (!$mail->send()) {
+//    echo "Email nu a putut fi trimis. \n";
+//    echo 'Mailer Error: ' . $mail->ErrorInfo;
+//    $daily->errorLog('Mail could not be sent.');
+//} else {
+//    echo "Email cu raport a fost trimis \n";
+//}
+
     echo $mail_body;
-}
