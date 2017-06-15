@@ -1,0 +1,6 @@
+config.php
+/.idea
+vcs.xml
+hash.txt
+white_list.txt
+errors.log
