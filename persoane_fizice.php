@@ -83,6 +83,7 @@ foreach ($user_plan as $user_id => $user) {
         $report[$user_id]['mention'] = $user['mention'];
         $report[$user_id]['mention1'] = $user['mention1'];
         $report[$user_id]['sms_status'] = $daily->getSMSStatus($user_id);
+        $report[$user_id]['disabled'] = $user['disabled'];
 
 //        $number_of_days_in_month
 
