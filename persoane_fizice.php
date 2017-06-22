@@ -215,7 +215,7 @@ ob_start(); ?>
                                 <tr>
                                     <td align="left" valign="middle"
                                         style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 24px; color: #353535; padding:3%; padding-top:40px; padding-bottom:40px;">
-                                        Raport zilnic persoane fizice
+                                        SMS raport zilnic persoane fizice
                                     </td>
                                 </tr>
                                 <tr>
