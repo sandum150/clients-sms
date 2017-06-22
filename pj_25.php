@@ -22,7 +22,7 @@ $trackes_by_users = [];
 foreach ($trackers as $tracker) {
     if (!$tracker->clone) {
         $tracker_price = $tarrifs[$tracker->source->tariff_id];
-//    echo "tracker id: " . $tracker->tariff_id . "<br>";
+
 
 //        we need to know how many trackers for each tarif does have users
         if (isset($trackes_by_users[$tracker->user_id][$tracker->source->tariff_id])) {
@@ -40,9 +40,7 @@ foreach ($trackers as $tracker) {
                 break;
             }
         }
-//        if (!isset($tracker_price)) {
-//            $tracker_price = null;
-//        }
+
         $user_plan[$tracker->user_id]['has_to_pay'] += $tracker_price;
         $user_plan[$tracker->user_id]['type'] = $user_object->legal_type;
         $user_plan[$tracker->user_id]['balance'] = $user_object->balance;
@@ -129,6 +127,8 @@ foreach ($user_plan as $user_id => $user) {
 
 echo "Total SMS trimise $sent_sms \n";
 
+//sorting the report by sms_action column
+usort($report, 'sortByStatus');
 
 ob_start(); ?>
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

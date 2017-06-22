@@ -37,9 +37,7 @@ foreach ($trackers as $tracker) {
                 break;
             }
         }
-//        if (!isset($tracker_price)) {
-//            $tracker_price = null;
-//        }
+
         $user_plan[$tracker->user_id]['has_to_pay'] += $tracker_price;
         $user_plan[$tracker->user_id]['type'] = $user_object->legal_type;
         $user_plan[$tracker->user_id]['balance'] = $user_object->balance;
@@ -78,13 +76,7 @@ foreach ($user_plan as $user_id => $user) {
         $report[$user_id]['mention1'] = $user['mention1'];
         $report[$user_id]['sms_status'] = $daily->getSMSStatus($user_id);
 
-
-
-
         $balance_good = $user['has_to_pay'] > $user['balance'] ?  false : true;
-
-
-
 
         switch ($report[$user_id]['sms_status']){
             case 'ok':
@@ -129,6 +121,8 @@ foreach ($user_plan as $user_id => $user) {
 
 echo "Total conturi $conturi_plata \n";
 
+//sorting the report by sms_action column
+usort($report, 'sortByStatus');
 
 ob_start(); ?>
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

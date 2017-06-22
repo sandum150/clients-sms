@@ -12,7 +12,6 @@ echo "Lista de trackere a fost obtinuta \n";
 $users = $daily->getUsersList();
 echo "Lista de useri a fost obtinuta \n";
 
-
 $number_of_days_in_month = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
 
 
@@ -40,9 +39,7 @@ foreach ($trackers as $tracker) {
                 break;
             }
         }
-//        if (!isset($tracker_price)) {
-//            $tracker_price = null;
-//        }
+
         $user_plan[$tracker->user_id]['has_to_pay'] += $tracker_price;
         $user_plan[$tracker->user_id]['type'] = $user_object->legal_type;
         $user_plan[$tracker->user_id]['balance'] = $user_object->balance;
@@ -61,10 +58,6 @@ foreach ($trackers as $tracker) {
     }
 
 }
-
-//echo '<pre>';
-//var_dump($user_plan);
-//echo '</pre>';
 
 echo "Facem planul userilor fara trackere clonuri. \n";
 
@@ -150,9 +143,10 @@ foreach ($user_plan as $user_id => $user) {
     }
 }
 
-
 echo "Total SMS trimise $sent_sms \n";
 
+//sorting the report by sms_action column
+usort($report, 'sortByStatus');
 
 ob_start(); ?>
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
