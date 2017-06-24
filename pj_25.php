@@ -86,7 +86,7 @@ foreach ($user_plan as $user_id => $user) {
                     $report[$user_id]['sms_action'] = ' - ';
                 }else{
 //                    send SMS and set status to sent
-                    $daily->sendSMS(SMS_MESSAGE_PJ, $user['phone']);
+//                    $daily->sendSMS(SMS_MESSAGE_PJ, $user['phone']);
                     $sent_sms++;
                     $daily->setSMSStaus($user_id, 'sent');
                     $report[$user_id]['sms_action'] = 'trimis';
@@ -114,7 +114,7 @@ foreach ($user_plan as $user_id => $user) {
                     $report[$user_id]['sms_action'] = ' - ';
                 }else{
 //                    new users also have to pay. Send SMS and set status to sent
-                    $daily->sendSMS(SMS_MESSAGE_PJ, $user['phone']);
+//                    $daily->sendSMS(SMS_MESSAGE_PJ, $user['phone']);
                     $sent_sms++;
                     $daily->setSMSStaus($user_id, 'sent');
                     $report[$user_id]['sms_action'] = 'trimis';
