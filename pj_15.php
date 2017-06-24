@@ -185,7 +185,7 @@ ob_start(); ?>
                                 <tr>
                                     <td align="left" valign="middle"
                                         style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 24px; color: #353535; padding:3%; padding-top:40px; padding-bottom:40px;">
-                                        Cont de plata raport lunar persoane juridice
+                                        <?php echo MAIL_SUBJECT_PJ_1; ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -202,7 +202,7 @@ ob_start(); ?>
                                                 </td>
                                                 <td align="left" bgcolor="#2B0057"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0; width: 25%">
-                                                    Trackere
+                                                    Obiecte | Tarif lunar
                                                 </td>
                                                 <td align="left" bgcolor="#2B0057"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0; width: 20%">
@@ -214,7 +214,7 @@ ob_start(); ?>
                                                 </td>
                                                 <td align="right" bgcolor="#2B0057"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-left:0; width: 13%">
-                                                    SMS trimis
+                                                    Status
                                                 </td>
                                             </tr>
                                             <?php
