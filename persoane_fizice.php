@@ -106,6 +106,7 @@ foreach ($user_plan as $user_id => $user) {
                     $daily->sendSMS(SMS_NEPLATATIT_PF, $user['phone']);
                     $status_date = $daily->getSMSDate($user_id);
                     $report[$user_id]['sms_action'] = 'suspendat';
+                    $sent_sms++;
                 }else{
 //                    nothing to do, sms was already sent last days
                     $status_date = $daily->getSMSDate($user_id);
