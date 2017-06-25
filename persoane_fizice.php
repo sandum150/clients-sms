@@ -50,7 +50,7 @@ foreach ($trackers as $tracker) {
         $user_plan[$tracker->user_id]['mention'] = $user_object->post_city;
         $user_plan[$tracker->user_id]['mention1'] = $user_object->registered_city;
         $user_plan[$tracker->user_id]['disabled'] = false;
-
+        $user_plan[$tracker->user_id]['activated'] = $user_object->activated; // is allowed to log in
 //        if at least one tracker is blocked
         if($tracker->source->blocked == true){
             $user_plan[$tracker->user_id]['disabled'] = true;
@@ -66,7 +66,7 @@ echo "Obtinem lista alba de telefoane \n";
 $report = [];
 $sent_sms = 0;
 foreach ($user_plan as $user_id => $user) {
-    if ($user['type'] == 'individual') { //legal_entity, individual
+    if ($user['type'] == 'individual' && $user['activated']) { //legal_entity, individual
 //        $report[$user_id]['sent_sms'] = false;
         $report[$user_id]['has_to_pay'] = $user['has_to_pay'];
         $report[$user_id]['balance'] = $user['balance'];
@@ -86,7 +86,7 @@ foreach ($user_plan as $user_id => $user) {
             case 'ok':
                 if($balance_good){
 //                    do nothing, it's ok
-                    $report[$user_id]['sms_action'] = ' - ';
+//                    $report[$user_id]['sms_action'] = ' - ';
                 }else{
 //                    send SMS and set status to sent
                     $daily->sendSMS(SMS_MESSAGE_PF, $user['phone']);
@@ -100,12 +100,12 @@ foreach ($user_plan as $user_id => $user) {
                 if($balance_good){
 //                    set staus to ok
                     $daily->setSMSStaus($user_id, 'ok');
-                    $report[$user_id]['sms_action'] = 'achitat, ok';
+//                    $report[$user_id]['sms_action'] = 'achitat, ok';
                 }elseif ($report[$user_id]['disabled']){
                     $daily->setSMSStaus($user_id, 'disabled');
                     $daily->sendSMS(SMS_NEPLATATIT_PF, $user['phone']);
                     $status_date = $daily->getSMSDate($user_id);
-                    $report[$user_id]['sms_action'] = 'dezactivat '. $status_date ;
+                    $report[$user_id]['sms_action'] = 'suspendat';
                 }else{
 //                    nothing to do, sms was already sent last days
                     $status_date = $daily->getSMSDate($user_id);
@@ -118,7 +118,7 @@ foreach ($user_plan as $user_id => $user) {
                 if ($balance_good){
 //                    this is a new user, set status to ok. Welcome.
                     $daily->setSMSStaus($user_id, 'ok');
-                    $report[$user_id]['sms_action'] = ' - ';
+//                    $report[$user_id]['sms_action'] = ' - ';
                 }else{
 //                    new users also have to pay. Send SMS and set status to sent
                     $daily->sendSMS(SMS_MESSAGE_PF, $user['phone']);
@@ -131,10 +131,10 @@ foreach ($user_plan as $user_id => $user) {
             case 'disabled':
                 if($balance_good){
                     $daily->setSMSStaus($user_id, 'ok');
-                    $report[$user_id]['sms_action'] = 'achitat, activat';
+//                    $report[$user_id]['sms_action'] = 'achitat, activat';
                 }else{
                     $status_date = $daily->getSMSDate($user_id);
-                    $report[$user_id]['sms_action'] = 'inactiv ' . $status_date;
+                    $report[$user_id]['sms_action'] = 'suspendat ' . $status_date;
 
                 }
         }
@@ -243,7 +243,9 @@ ob_start(); ?>
                                             </tr>
                                             <?php
 
-                                            foreach ($report as $user_id => $user): ?>
+                                            foreach ($report as $user_id => $user):
+                                                if($user['sms_action']):
+                                                ?>
                                                 <tr>
                                                     <td width="10%" align="left" bgcolor="#FFFFFF"
                                                         style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-right:0;">
@@ -276,7 +278,7 @@ ob_start(); ?>
                                                         ?>
                                                     </td>
                                                 </tr>
-                                                <?php
+                                                <?php endif;
                                             endforeach; ?>
                                             <tr>
                                                 <td width="20%" align="right" bgcolor="#FFFFFF"

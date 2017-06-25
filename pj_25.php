@@ -50,7 +50,7 @@ foreach ($trackers as $tracker) {
         $user_plan[$tracker->user_id]['trackers'] = $trackes_by_users[$tracker->user_id];
         $user_plan[$tracker->user_id]['mention'] = $user_object->post_city;
         $user_plan[$tracker->user_id]['mention1'] = $user_object->registered_city;
-
+        $user_plan[$tracker->user_id]['activated'] = $user_object->activated; // is allowed to log in
     }
 
 }
@@ -63,7 +63,7 @@ echo "Obtinem lista alba de telefoane \n";
 $report = [];
 $sent_sms = 0;
 foreach ($user_plan as $user_id => $user) {
-    if ($user['type'] == 'legal_entity') { //legal_entity, individual
+    if ($user['type'] == 'legal_entity' && $user['activated']) { //legal_entity, individual
 //        $report[$user_id]['sent_sms'] = false;
         $report[$user_id]['has_to_pay'] = $user['has_to_pay'];
         $report[$user_id]['balance'] = $user['balance'];
@@ -83,13 +83,13 @@ foreach ($user_plan as $user_id => $user) {
             case 'ok':
                 if($balance_good){
 //                    do nothing, it's ok
-                    $report[$user_id]['sms_action'] = ' - ';
+//                    $report[$user_id]['sms_action'] = ' - ';
                 }else{
 //                    send SMS and set status to sent
 //                    $daily->sendSMS(SMS_MESSAGE_PJ, $user['phone']);
                     $sent_sms++;
                     $daily->setSMSStaus($user_id, 'sent');
-                    $report[$user_id]['sms_action'] = 'trimis';
+                    $report[$user_id]['sms_action'] = 'neachitat';
                 }
                 break;
             case 'sent':
@@ -103,7 +103,7 @@ foreach ($user_plan as $user_id => $user) {
                     $report[$user_id]['sms_action'] = 'achitat';
                 }else{
 //                    nothing to do, sms was already sent last days
-                    $report[$user_id]['sms_action'] = 'inactiv' . $daily->getSMSDate($user_id);
+//                    $report[$user_id]['sms_action'] = 'inactiv' . $daily->getSMSDate($user_id);
                 }
                 break;
 
@@ -111,13 +111,13 @@ foreach ($user_plan as $user_id => $user) {
                 if ($balance_good){
 //                    this is a new user, set status to ok. Welcome.
                     $daily->setSMSStaus($user_id, 'ok');
-                    $report[$user_id]['sms_action'] = ' - ';
+//                    $report[$user_id]['sms_action'] = ' - ';
                 }else{
 //                    new users also have to pay. Send SMS and set status to sent
 //                    $daily->sendSMS(SMS_MESSAGE_PJ, $user['phone']);
                     $sent_sms++;
                     $daily->setSMSStaus($user_id, 'sent');
-                    $report[$user_id]['sms_action'] = 'trimis';
+                    $report[$user_id]['sms_action'] = 'neachitat';
                 }
         }
 

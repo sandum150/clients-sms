@@ -47,7 +47,8 @@ foreach ($trackers as $tracker) {
         $user_plan[$tracker->user_id]['trackers'] = $trackes_by_users[$tracker->user_id];
         $user_plan[$tracker->user_id]['mention'] = $user_object->post_city;
         $user_plan[$tracker->user_id]['mention1'] = $user_object->registered_city;
-        $user_plan[$tracker->user_id]['disabled'] = false;
+        $user_plan[$tracker->user_id]['disabled'] = false; //trackers are working?
+        $user_plan[$tracker->user_id]['activated'] = $user_object->activated; // is allowed to log in
 
 //        if at least one tracker is blocked
         if($tracker->source->blocked == true){
@@ -64,8 +65,9 @@ echo "Obtinem lista alba de telefoane \n";
 
 $report = [];
 $conturi_plata = 0;
+$forecast = 0;
 foreach ($user_plan as $user_id => $user) {
-    if ($user['type'] == 'legal_entity') { //legal_entity, individual
+    if ($user['type'] == 'legal_entity' && $user['activated']) { //legal_entity, individual
 //        $report[$user_id]['sent_sms'] = false;
         $report[$user_id]['has_to_pay'] = $user['has_to_pay'];
         $report[$user_id]['balance'] = $user['balance'];
@@ -81,10 +83,11 @@ foreach ($user_plan as $user_id => $user) {
         switch ($report[$user_id]['sms_status']){
             case 'ok':
                 if($balance_good){
-                    $report[$user_id]['sms_action'] = ' - ';
+//                    $report[$user_id]['sms_action'] = ' - ';
                 }else{
                     $conturi_plata++;
                     $report[$user_id]['sms_action'] = 'cont de plata';
+                    $forecast += $report[$user_id]['has_to_pay'];
                 }
                 break;
             case 'sent':
@@ -94,7 +97,7 @@ foreach ($user_plan as $user_id => $user) {
 
             case 'disabled':
                 if($balance_good){
-                    $report[$user_id]['sms_action'] = 'achitat';
+//                    $report[$user_id]['sms_action'] = 'achitat';
                     $daily->setSMSStaus($user_id, 'ok');
                 }else{
                     $report[$user_id]['sms_action'] = 'inactiv ' . $daily->getSMSDate($user_id);
@@ -105,12 +108,13 @@ foreach ($user_plan as $user_id => $user) {
                 if ($balance_good){
 //                    this is a new user, set status to ok. Welcome.
                     $daily->setSMSStaus($user_id, 'ok');
-                    $report[$user_id]['sms_action'] = ' - ';
+//                    $report[$user_id]['sms_action'] = ' - ';
                 }else{
 //                    new users also have to pay. Send SMS
                     $daily->sendSMS(SMS_MESSAGE_PF, $user['phone']);
                     $conturi_plata++;
                     $report[$user_id]['sms_action'] = 'cont de plata';
+                    $forecast += $report[$user_id]['has_to_pay'];
                 }
         }
 
@@ -219,7 +223,8 @@ ob_start(); ?>
                                             </tr>
                                             <?php
 
-                                            foreach ($report as $user_id => $user): ?>
+                                            foreach ($report as $user_id => $user):
+                                                if($user['sms_action']): ?>
                                                 <tr>
                                                     <td  align="left" bgcolor="#FFFFFF"
                                                         style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-right:0;">
@@ -252,24 +257,44 @@ ob_start(); ?>
                                                         ?>
                                                     </td>
                                                 </tr>
-                                                <?php
+                                                <?php endif;
                                             endforeach; ?>
                                             <tr>
-                                                <td width="20%" align="right" bgcolor="#FFFFFF"
-                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;"></td>
-                                                <td width="20%" align="right" bgcolor="#FFFFFF"
-                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;"></td>
-                                                <td width="20%" align="right" bgcolor="#FFFFFF"
-                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;"></td>
-                                                <td width="20%" align="right" bgcolor="#FFFFFF"
-                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;">
-                                                <td width="20%" align="right" bgcolor="#FFFFFF"
-                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;">
-                                                    <b>Total conturi de plata</b>
-                                                </td>
-                                                <td width="20%" align="right" bgcolor="#FFFFFF"
-                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;">
-                                                    <b><?php echo $conturi_plata; ?></b>
+                                                <td colspan="6">
+                                                    <table width="100%">
+                                                        <tr>
+                                                            <td width="20%" align="right" bgcolor="#FFFFFF"
+                                                                style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;"></td>
+                                                            <td width="20%" align="right" bgcolor="#FFFFFF"
+                                                                style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;"></td>
+                                                            <td width="20%" align="right" bgcolor="#FFFFFF"
+                                                                style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;"></td>
+                                                            <td width="20%" align="right" bgcolor="#FFFFFF"
+                                                                style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;">
+                                                                <b>Total conturi de plata</b>
+                                                            </td>
+                                                            <td width="20%" align="right" bgcolor="#FFFFFF"
+                                                                style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;">
+                                                                <b><?php echo $conturi_plata; ?></b>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="20%" align="right" bgcolor="#FFFFFF"
+                                                                style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;"></td>
+                                                            <td width="20%" align="right" bgcolor="#FFFFFF"
+                                                                style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;"></td>
+                                                            <td width="20%" align="right" bgcolor="#FFFFFF"
+                                                                style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;">
+                                                            <td width="30%" align="right" bgcolor="#FFFFFF"
+                                                                style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;">
+                                                                <b>Suma conturilor de plata</b>
+                                                            </td>
+                                                            <td width="20%" align="right" bgcolor="#FFFFFF"
+                                                                style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;">
+                                                                <b><?php echo $forecast; ?></b>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
                                                 </td>
                                             </tr>
                                         </table>
