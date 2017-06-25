@@ -93,8 +93,17 @@ foreach ($user_plan as $user_id => $user) {
                 }
                 break;
             case 'sent':
-                $daily->errorLog('invalid SMS status in pj2.php. SMS deja a fost trimis. user id: ' . $user_id);
-                $report[$user_id]['sms_action'] = 'status error (trimis)';
+                if($balance_good){
+//                    do nothing, it's ok
+                    $report[$user_id]['sms_action'] = 'achitat';
+                    $daily->setSMSStaus($user_id, 'ok');
+                }else{
+//                    send SMS and set status to sent
+//                    $daily->sendSMS(SMS_MESSAGE_PJ, $user['phone']);
+//                    $sent_sms++;
+//                    $daily->setSMSStaus($user_id, 'sent');
+                    $report[$user_id]['sms_action'] = 'neachitat';
+                }
                 break;
             case 'disabled':
                 if($balance_good){
@@ -225,7 +234,8 @@ ob_start(); ?>
                                             </tr>
                                             <?php
 
-                                            foreach ($report as $user_id => $user): ?>
+                                            foreach ($report as $user_id => $user):
+                                                if($user['sms_action']): ?>
                                                 <tr>
                                                     <td width="10%" align="left" bgcolor="#FFFFFF"
                                                         style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-right:0;">
@@ -258,7 +268,7 @@ ob_start(); ?>
                                                         ?>
                                                     </td>
                                                 </tr>
-                                                <?php
+                                                <?php endif;
                                             endforeach; ?>
                                             <tr>
                                                 <td width="20%" align="right" bgcolor="#FFFFFF"
