@@ -19,7 +19,7 @@ $user_plan = [];
 $trackes_by_users = [];
 
 foreach ($trackers as $tracker) {
-    if (!$tracker->clone) {
+    if (!$tracker->clone && !$tracker->deleted) {
         $tracker_price = $tarrifs[$tracker->source->tariff_id];
 //    echo "tracker id: " . $tracker->tariff_id . "<br>";
 

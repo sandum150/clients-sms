@@ -17,7 +17,7 @@ $user_plan = [];
 $trackes_by_users = [];
 
 foreach ($trackers as $tracker) {
-    if (!$tracker->clone) {
+    if (!$tracker->clone && !$tracker->deleted) {
         $tracker_price = $tarrifs[$tracker->source->tariff_id];
 //    echo "tracker id: " . $tracker->tariff_id . "<br>";
 
@@ -218,7 +218,7 @@ ob_start(); ?>
                                                 </td>
                                                 <td align="right" bgcolor="#2B0057"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-left:0; width: 13%">
-                                                    Status
+                                                    Statut
                                                 </td>
                                             </tr>
                                             <?php
