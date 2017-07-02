@@ -91,7 +91,7 @@ foreach ($user_plan as $user_id => $user) {
 //                    $report[$user_id]['sms_action'] = 'achitat';
                 }else{
 //                    nothing to do, sms was already sent last days
-                    $daily->sendSMS(SMS_NEPLATA_PJ_DATA_1, $user_id);
+                    $daily->sendSMS(SMS_NEPLATA_PJ_DATA_1, $user['phone']);
                     $report[$user_id]['sms_action'] = 'suspendat, sms trimis';
                     $daily->setSMSStaus($user_id, 'disabled');
                     $sent_sms++;
