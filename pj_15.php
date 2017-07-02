@@ -201,11 +201,11 @@ ob_start(); ?>
                                                 </td>
                                                 <td align="left" bgcolor="#2B0057"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0; width: 12%">
-                                                    Balanta x Tarif lunar
+                                                    Balanta | Tarif lunar
                                                 </td>
                                                 <td align="left" bgcolor="#2B0057"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0; width: 25%">
-                                                    Obiecte | Tarif lunar
+                                                    Obiecte x Tarif lunar
                                                 </td>
                                                 <td align="left" bgcolor="#2B0057"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0; width: 20%">
