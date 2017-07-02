@@ -134,7 +134,7 @@ class ClientChecker{
 
             if(!strpos($response, "Success")){
                 $response = explode("\n", $response);
-                $this->errorLog($response[2], 'sendSMS');
+                $this->errorLog($response[2], 'sendSMS '.$recipient);
                 return false;
             }
         }
