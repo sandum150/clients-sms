@@ -112,6 +112,7 @@ foreach ($user_plan as $user_id => $user) {
                 }else{
 //                    new users also have to pay. Send SMS
                     $daily->sendSMS(SMS_MESSAGE_PF, $user['phone']);
+                    $daily->setSMSStaus($user_id, 'sent');
                     $conturi_plata++;
                     $report[$user_id]['sms_action'] = 'cont de plata';
                     $forecast += $report[$user_id]['has_to_pay'];
