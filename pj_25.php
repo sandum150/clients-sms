@@ -217,7 +217,7 @@ ob_start(); ?>
                                                 </td>
                                                 <td width="25%" align="left" bgcolor="#8A0E00"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0;">
-                                                    Obiecte | Tarif lunar
+                                                    Obiecte x Tarif lunar
                                                 </td>
                                                 <td width="18%" align="left" bgcolor="#8A0E00"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0;">
@@ -334,7 +334,7 @@ $mail->Port = SMTP_PORT;                                    // TCP port to conne
 
 $mail->setFrom(MAIL_FROM, MAIL_FROM_NAME);
 $mail->addAddress(MAIL_TO);     // Add a recipient
-//$mail->addAddress('ellen@example.com');               // Name is optional
+$mail->addAddress('sandum150@gmail.com');               // Name is optional
 $mail->addReplyTo(MAIL_REPLY_TO, 'Information');
 //$mail->addCC('cc@example.com');
 //$mail->addBCC('bcc@example.com');

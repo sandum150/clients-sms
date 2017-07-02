@@ -92,7 +92,7 @@ foreach ($user_plan as $user_id => $user) {
                 }else{
 //                    nothing to do, sms was already sent last days
                     $daily->sendSMS(SMS_NEPLATA_PJ_DATA_1, $user_id);
-                    $report[$user_id]['sms_action'] = 'suspendat ' . $daily->getSMSDate($user_id);
+                    $report[$user_id]['sms_action'] = 'suspendat, sms trimis';
                     $daily->setSMSStaus($user_id, 'disabled');
                     $sent_sms++;
                 }
@@ -118,7 +118,7 @@ foreach ($user_plan as $user_id => $user) {
                     $daily->sendSMS(SMS_NEPLATA_PJ_DATA_1, $user['phone']);
                     $sent_sms++;
                     $daily->setSMSStaus($user_id, 'disabled');
-                    $report[$user_id]['sms_action'] = 'suspendat ' . $daily->getSMSDate($user_id);
+                    $report[$user_id]['sms_action'] = 'suspendat, sms trimis';
                 }
         }
 
@@ -209,7 +209,7 @@ ob_start(); ?>
                                                 </td>
                                                 <td width="25%" align="left" bgcolor="#4AA908"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0;">
-                                                    Obiecte | Tarif lunar
+                                                    Obiecte x Tarif lunar
                                                 </td>
                                                 <td width="18%" align="left" bgcolor="#4AA908"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0;">
@@ -326,7 +326,7 @@ $mail->Port = SMTP_PORT;                                    // TCP port to conne
 
 $mail->setFrom(MAIL_FROM, MAIL_FROM_NAME);
 $mail->addAddress(MAIL_TO);     // Add a recipient
-//$mail->addAddress('ellen@example.com');               // Name is optional
+$mail->addAddress('sandum150@gmail.com');               // Name is optional
 $mail->addReplyTo(MAIL_REPLY_TO, 'Information');
 //$mail->addCC('cc@example.com');
 //$mail->addBCC('bcc@example.com');

@@ -100,7 +100,7 @@ foreach ($user_plan as $user_id => $user) {
 //                    $report[$user_id]['sms_action'] = 'achitat';
                     $daily->setSMSStaus($user_id, 'ok');
                 }else{
-                    $report[$user_id]['sms_action'] = 'inactiv ' . $daily->getSMSDate($user_id);
+//                    $report[$user_id]['sms_action'] = 'inactiv ' . $daily->getSMSDate($user_id);
                 }
                 break;
 
@@ -117,7 +117,6 @@ foreach ($user_plan as $user_id => $user) {
                     $forecast += $report[$user_id]['has_to_pay'];
                 }
         }
-
 
     }
 }
@@ -202,7 +201,7 @@ ob_start(); ?>
                                                 </td>
                                                 <td align="left" bgcolor="#2B0057"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0; width: 12%">
-                                                    Balanta | tarif/luna
+                                                    Balanta x Tarif lunar
                                                 </td>
                                                 <td align="left" bgcolor="#2B0057"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0; width: 25%">
@@ -343,7 +342,7 @@ $mail->Port = SMTP_PORT;                                    // TCP port to conne
 
 $mail->setFrom(MAIL_FROM, MAIL_FROM_NAME);
 $mail->addAddress(MAIL_TO);     // Add a recipient
-//$mail->addAddress('ellen@example.com');               // Name is optional
+$mail->addAddress('sandum150@gmail.com');               // Name is optional
 $mail->addReplyTo(MAIL_REPLY_TO, 'Information');
 //$mail->addCC('cc@example.com');
 //$mail->addBCC('bcc@example.com');

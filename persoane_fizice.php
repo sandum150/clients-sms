@@ -92,7 +92,7 @@ foreach ($user_plan as $user_id => $user) {
                     $daily->sendSMS(SMS_MESSAGE_PF, $user['phone']);
                     $sent_sms++;
                     $daily->setSMSStaus($user_id, 'sent');
-                    $report[$user_id]['sms_action'] = 'trimis';
+                    $report[$user_id]['sms_action'] = 'sms trimis';
                 }
                 break;
 
@@ -125,7 +125,7 @@ foreach ($user_plan as $user_id => $user) {
                     $daily->sendSMS(SMS_MESSAGE_PF, $user['phone']);
                     $sent_sms++;
                     $daily->setSMSStaus($user_id, 'sent');
-                    $report[$user_id]['sms_action'] = 'trimis';
+                    $report[$user_id]['sms_action'] = 'sms trimis';
                 }
                 break;
 
@@ -227,7 +227,7 @@ ob_start(); ?>
                                                 </td>
                                                 <td width="25%" align="left" bgcolor="#252525"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0;">
-                                                    Obiecte | Tarif lunar
+                                                    Obiecte x Tarif lunar
                                                 </td>
                                                 <td width="18%" align="left" bgcolor="#252525"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0;">
