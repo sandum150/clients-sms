@@ -326,7 +326,7 @@ $mail->Port = SMTP_PORT;                                    // TCP port to conne
 
 $mail->setFrom(MAIL_FROM, MAIL_FROM_NAME);
 $mail->addAddress(MAIL_TO);     // Add a recipient
-$mail->addAddress('sandum150@gmail.com');               // Name is optional
+//$mail->addAddress('sandum150@gmail.com');               // Name is optional
 $mail->addReplyTo(MAIL_REPLY_TO, 'Information');
 //$mail->addCC('cc@example.com');
 //$mail->addBCC('bcc@example.com');
