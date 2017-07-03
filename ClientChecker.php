@@ -39,8 +39,8 @@ class ClientChecker{
         }else{
             $this->errorLog("Hash is not valid. Going to get a new one...");
             $result = $this->curlRequest($this->admin_dashboard_api_url."/account/auth/", array(
-                'login'     => $this->admin_dashboard_user,
-                'password'  => $this->admin_dashboard_pass
+                'login'     => urlencode($this->admin_dashboard_user),
+                'password'  => urlencode($this->admin_dashboard_pass)
             ));
 
             if($result){
