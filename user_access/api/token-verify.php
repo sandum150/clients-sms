@@ -26,7 +26,7 @@ try {
 
     $stmt->execute();
     if ($stmt->rowCount() > 0) {
-        $result = $stmt->fetch();
+
         header("HTTP/1.1 200 OK");
         echo json_encode([
             'success' => true,
@@ -38,6 +38,7 @@ try {
             "success" => false,
             "error" => "Token not valid"
         ]);
+        die;
     }
 } catch (PDOException $e) {
     header("HTTP/1.1 401 Unauthorized");

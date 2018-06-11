@@ -110,6 +110,12 @@ class ClientChecker{
         return $users->list;
     }
 
+    public function getUserSession($user_id){
+        $result = $this->curlRequest($this->admin_dashboard_api_url."user/session/create", ['user_id' => $user_id]);
+        $users = json_decode($result);
+        return $users->hash;
+    }
+
     public function getTrackerList(){
         $trackers = $this->curlRequest($this->admin_dashboard_api_url."tracker/list/");
         $trackers = json_decode($trackers);
