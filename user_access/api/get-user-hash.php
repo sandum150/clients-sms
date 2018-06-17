@@ -2,13 +2,11 @@
 //phpinfo();
 //ini_set('display_errors', 1);
 
-header('Access-Control-Allow-Origin', '*');
-header('Content-Type: application/json');
-
 require_once "../Database.php";
 require_once "../JWT.php";
 require_once "../../config.php";
 require_once "../../ClientChecker.php";
+require_once "../functions.php";
 
 
 $clientChecker = new ClientChecker();
@@ -18,8 +16,14 @@ $db = new Databease();
 
 $conn = $db->connect();
 
+header('Content-Type: application/json');
+cors();
+
 try {
-    $token = $_POST['token'];
+    $headers = apache_request_headers();
+    $token = $headers['Authorization'];
+
+//    echo $token; die;
 
     $decoded = JWT::decode($token, JWT_KEY, 'HS256');
 
@@ -31,9 +35,22 @@ try {
     if ($stmt->rowCount() > 0) {
 
         $allUsers = $clientChecker->getUsersList();
-        $searchKey = $_POST['search'];
+
+        $json = json_decode(file_get_contents('php://input'));
+
+        $searchKey = $json->search;
 
         $foundUserId = null;
+
+//        if search string is empty don't search
+        if (trim($searchKey)== ""){
+            header("HTTP/1.1 400 Bad Request");
+            echo json_encode([
+                "success" => false,
+                "error" => "Search string should not be empty."
+            ]);
+            die;
+        }
 
         foreach ($allUsers as $user) {
             if ($user->login == $searchKey || $user->phone == $searchKey) {
@@ -46,6 +63,8 @@ try {
 
         $data['user_id'] = $foundUserId;
 
+//        echo "User: ".$foundUserId;
+
         if ($foundUserId) {
             $userHash = $clientChecker->getUserSession($foundUserId);
 
@@ -57,6 +76,7 @@ try {
         } else {
             header("HTTP/1.1 400 Bad Request");
             echo json_encode([
+                "message" => "User not found",
                 "success" => false,
             ]);
         }

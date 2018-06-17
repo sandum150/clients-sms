@@ -1,21 +1,23 @@
 <?php
 ini_set('display_errors', 1);
 
-
-header('Access-Control-Allow-Origin', '*');
-header('Content-Type', 'application/json');
-
-
 require_once "../Database.php";
 require_once "../JWT.php";
 require_once "../../config.php";
+require_once "../functions.php";
+    header('Content-Type: application/json');
+cors();
 
 $db = new Databease();
 
 $conn = $db->connect();
 
+
 try {
-    $query = "SELECT * FROM users WHERE login = '" . $_POST['login'] . "' AND password = '" . JWT::hashPassword($_POST['password'], PASSWORD_KEY) . "' AND status = 1";
+
+    $json = json_decode(file_get_contents('php://input'));
+
+    $query = "SELECT * FROM users WHERE login = '" . $json->login . "' AND password = '" . JWT::hashPassword($json->password, PASSWORD_KEY) . "' AND status = 1";
 
     $stmt = $conn->prepare($query);
 

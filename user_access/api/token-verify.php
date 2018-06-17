@@ -1,22 +1,21 @@
 <?php
 ini_set('display_errors', 1);
 
-
-header('Access-Control-Allow-Origin', '*');
-header('Content-Type: application/json');
-
-
-
 require_once "../Database.php";
 require_once "../JWT.php";
 require_once "../../config.php";
+require_once "../functions.php";
+
+cors();
 
 $db = new Databease();
 
 $conn = $db->connect();
 
 try {
-    $token = $_POST['token'];
+    $headers = apache_request_headers();
+
+    $token = $headers['Authorization'];
 
     $decoded = JWT::decode($token, JWT_KEY, 'HS256');
 
@@ -26,10 +25,17 @@ try {
 
     $stmt->execute();
     if ($stmt->rowCount() > 0) {
+        $result = $stmt->fetch();
+        $user = [];
+        $user['login'] = $result['login'];
+        $user['email'] = $result['email'];
+        $user['access_level'] = $result['access_level'];
+        $user['status'] = $result['status'];
 
         header("HTTP/1.1 200 OK");
         echo json_encode([
             'success' => true,
+            'user' => $user
         ]);
         die;
     } else {
