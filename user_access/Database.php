@@ -1,7 +1,8 @@
 <?php
 
 //require_once "../config.php";
-require_once("../../config.php");
+//echo __DIR__;die;
+require_once(__DIR__."/../config.php");
 class Databease {
 
     private $conn;
