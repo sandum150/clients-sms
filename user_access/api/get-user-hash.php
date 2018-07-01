@@ -53,7 +53,7 @@ try {
         }
 
         foreach ($allUsers as $user) {
-            if ($user->login == $searchKey || $user->phone == $searchKey) {
+            if ($user->login == $searchKey || $user->phone == $searchKey || $user->id == $searchKey) {
                 $foundUserId = $user->id;
                 break;
             }

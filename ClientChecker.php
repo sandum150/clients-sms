@@ -81,6 +81,7 @@ class ClientChecker{
         $parameters = ltrim($parameters , "&");
 
         $ch = curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, 1);
         if($parameters){
@@ -122,12 +123,15 @@ class ClientChecker{
         return $trackers->list;
     }
 
-    public function getTariffList(){
+    public function getTariffList($allInfo = false){
         $tariffs = $this->curlRequest($this->admin_dashboard_api_url."tariff/list/");
         $tariffs = json_decode($tariffs);
         $tarrif_list = [];
         foreach ($tariffs->list as $tarrif){
             $tarrif_list[$tarrif->id] = $tarrif->price;
+        }
+        if($allInfo){
+            return $tariffs->list;
         }
         return $tarrif_list;
     }

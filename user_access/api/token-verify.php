@@ -1,14 +1,17 @@
 <?php
-ini_set('display_errors', 1);
+//ini_set('display_errors', 1);
 
-require_once "../Database.php";
-require_once "../JWT.php";
-require_once "../../config.php";
-require_once "../functions.php";
+require_once __DIR__."/../Database.php";
+require_once __DIR__."/../JWT.php";
+require_once __DIR__."/../../config.php";
+require_once __DIR__."/../functions.php";
+require_once __DIR__."/../../ClientChecker.php";
 
 cors();
 
 $db = new Databease();
+
+$cc = new ClientChecker();
 
 $conn = $db->connect();
 
@@ -32,10 +35,19 @@ try {
         $user['access_level'] = $result['access_level'];
         $user['status'] = $result['status'];
 
+
+//        get trackers
+        $trackers = $cc->getTrackerList();
+        $users = $cc->getUsersList();
+        $tarifs = $cc->getTariffList(true);
+
         header("HTTP/1.1 200 OK");
         echo json_encode([
             'success' => true,
-            'user' => $user
+            'user' => $user,
+            'trackers' => $trackers,
+            'users' => $users,
+            'tarifs' => $tarifs
         ]);
         die;
     } else {
