@@ -38,7 +38,7 @@ try {
 
         $json = json_decode(file_get_contents('php://input'));
 
-        $searchKey = $json->search;
+        $searchKey = strtolower($json->search);
 
         $foundUserId = null;
 
@@ -52,9 +52,16 @@ try {
             die;
         }
 
+        $foundUser = null;
         foreach ($allUsers as $user) {
-            if ($user->login == $searchKey || $user->phone == $searchKey || $user->id == $searchKey) {
+            if (
+                strtolower($user->login) == $searchKey ||
+                strtolower($user->phone) == $searchKey ||
+                strtolower($user->id) == $searchKey ||
+                strtolower($user->last_name) == $searchKey
+            ) {
                 $foundUserId = $user->id;
+                $foundUser = $user;
                 break;
             }
         }
@@ -71,7 +78,8 @@ try {
             header("HTTP/1.1 200 OK");
             echo json_encode([
                 "success" => true,
-                "user_hash" => $userHash
+                "user_hash" => $userHash,
+                "user" => $foundUser
             ]);
         } else {
             header("HTTP/1.1 400 Bad Request");

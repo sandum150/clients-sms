@@ -42,7 +42,7 @@ try {
         header("HTTP/1.1 401 Unauthorized");
         echo json_encode([
             "success" => false,
-            "error" => "User of password not correct"
+            "error" => "User or password not correct"
         ]);
     }
 } catch (PDOException $e) {
