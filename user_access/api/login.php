@@ -17,7 +17,10 @@ try {
 
     $json = json_decode(file_get_contents('php://input'));
 
-    $query = "SELECT * FROM users WHERE login = '" . $json->login . "' AND password = '" . JWT::hashPassword($json->password, PASSWORD_KEY) . "' AND status = 1";
+    $query = "SELECT * FROM users 
+WHERE login = '" . $json->login . "' 
+AND password = '" . JWT::hashPassword($json->password, PASSWORD_KEY) . "' 
+AND status = 1";
 
     $stmt = $conn->prepare($query);
 

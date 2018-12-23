@@ -19,7 +19,7 @@ class ClientChecker{
     }
 
     function __destruct(){
-        $this->conn->close();
+//        $this->conn->close();
     }
 
     private $admin_dashboard_user = NX_DASHBOARD_USERNAME;
