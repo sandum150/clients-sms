@@ -2,7 +2,8 @@
 require_once 'config.php';
 
 class ClientChecker{
-    function __construct() {
+    function __construct()
+    {
         $this->hash = $this->getHash();
 
         $white_list = file_get_contents('white_list.txt');
@@ -12,9 +13,6 @@ class ClientChecker{
         if ($this->conn->connect_error) {
             $this->errorLog("Connection to db failed : " . $this->conn->connect_error);
             die('Connection failed: ' . $this->conn->connect_error);
-        }
-        else {
-            echo 'Connected to db...';
         }
     }
 
