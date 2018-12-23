@@ -11,6 +11,10 @@ class ClientChecker{
         $this->conn = new mysqli(DB_SERVER_NAME, DB_USER_NAME, DB_PASSWORD, DB_DB_NAME);
         if ($this->conn->connect_error) {
             $this->errorLog("Connection to db failed : " . $this->conn->connect_error);
+            die('Connection failed: ' . $this->conn->connect_error);
+        }
+        else {
+            echo 'Connected to db...';
         }
     }
 
