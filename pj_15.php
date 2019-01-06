@@ -1,5 +1,11 @@
 <?php
 error_reporting(0);
+
+$number_of_days_in_month = date('t');
+if($number_of_days_in_month !== date('d')){
+    die('today is not the last day');
+}
+
 require('ClientChecker.php');
 require_once 'PHPMailer-master/PHPMailerAutoload.php';
 
