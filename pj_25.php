@@ -1,5 +1,11 @@
 <?php
 error_reporting(0);
+
+$number_of_days_in_month = date('t');
+if($number_of_days_in_month !== date('d')){
+    die('today is not the last day');
+}
+
 require('ClientChecker.php');
 require_once 'PHPMailer-master/PHPMailerAutoload.php';
 
@@ -86,7 +92,7 @@ foreach ($user_plan as $user_id => $user) {
 //                    $report[$user_id]['sms_action'] = ' - ';
                 }else{
 //                    send SMS and set status to sent
-//                    $daily->sendSMS(SMS_MESSAGE_PJ, $user['phone']);
+                    $daily->sendSMS(SMS_MESSAGE_PJ, $user['phone']);
                     $sent_sms++;
                     $daily->setSMSStaus($user_id, 'sent');
                     $report[$user_id]['sms_action'] = 'neachitat';
@@ -99,9 +105,9 @@ foreach ($user_plan as $user_id => $user) {
                     $daily->setSMSStaus($user_id, 'ok');
                 }else{
 //                    send SMS and set status to sent
-//                    $daily->sendSMS(SMS_MESSAGE_PJ, $user['phone']);
-//                    $sent_sms++;
-//                    $daily->setSMSStaus($user_id, 'sent');
+                    $daily->sendSMS(SMS_MESSAGE_PJ, $user['phone']);
+                    $sent_sms++;
+                    $daily->setSMSStaus($user_id, 'sent');
                     $report[$user_id]['sms_action'] = 'neachitat';
                 }
                 break;
@@ -123,7 +129,7 @@ foreach ($user_plan as $user_id => $user) {
 //                    $report[$user_id]['sms_action'] = ' - ';
                 }else{
 //                    new users also have to pay. Send SMS and set status to sent
-//                    $daily->sendSMS(SMS_MESSAGE_PJ, $user['phone']);
+                    $daily->sendSMS(SMS_MESSAGE_PJ, $user['phone']);
                     $sent_sms++;
                     $daily->setSMSStaus($user_id, 'sent');
                     $report[$user_id]['sms_action'] = 'neachitat';
