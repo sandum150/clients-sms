@@ -240,6 +240,26 @@ class ClientChecker{
     }
 
 
+    public function setTrackerStatus($tracker_id, $status) {
+        $status = $status ? 'inactive' : 'active';
+        $sql = "INSERT INTO tracker_status (tracker_id, status) 
+                VALUES ($tracker_id, '$status') 
+                ON DUPLICATE KEY UPDATE 
+                status = '$status';";
+        if ($this->conn->query($sql) === TRUE) {
+            return true;
+        } else {
+            $this->errorLog("nu a putut fi setat tracker_status pentru user $tracker_id . Error:" . $this->conn->error);
+            return false;
+        }
+    }
+
+    public function getAllTrackersStatuses () {
+        $sql = "SELECT * FROM tracker_status" ;
+        $result = $this->conn->query($sql);
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
 }
 
 function sortByStatus($a, $b){
