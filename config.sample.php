@@ -6,15 +6,18 @@ define("SMTP_PASSWORD",             "PASS C+");
 define("SMTP_PORT",                 465);
 
 //MAIL settings
-define("MAIL_FROM",                 "amoldovanu@best4u.nl");
-define("MAIL_FROM_NAME",            "Tehos rapoarte");
-define("MAIL_TO",                   "sandum150@gmail.com");
-define("MAIL_REPLY_TO",             "amoldovanu@best4u.nl");
-define("MAIL_SUBJECT_PF",           "SMS raport zilnic persoane fizice");
-define("MAIL_SUBJECT_PJ_01",        "Raport de suspendare lunar persoane juridice");
-define("MAIL_SUBJECT_PJ_1",         "Cont de plata raport lunar persoane juridice");
-define("MAIL_SUBJECT_PJ_2",         "Raport lunar persoane juridice restante");
-define("TRACKERS_PER_TARIF",        "Raport lunar Trackere active per tarif");
+define("MAIL_FROM",                         "amoldovanu@best4u.nl");
+define("MAIL_FROM_NAME",                    "Tehos rapoarte");
+define("MAIL_TO",                           "sandum150@gmail.com");
+define("MAIL_REPLY_TO",                     "amoldovanu@best4u.nl");
+define("MAIL_SUBJECT_PF",                   "SMS raport zilnic persoane fizice");
+define("MAIL_SUBJECT_PJ_01",                "Raport de suspendare lunar persoane juridice");
+define("MAIL_SUBJECT_PJ_1",                 "Cont de plata raport lunar persoane juridice");
+define("MAIL_SUBJECT_PJ_2",                 "Raport lunar persoane juridice restante");
+define("MAIL_SUBJECT_TRACKERS_PER_TARIF",   "Raport lunar Trackere active per tarif");
+define("MAIL_TRACKERS_ACTIVE",              "Raport trackere conectate");
+define("MAIL_TRACKERS_INACTIVE",            "Raport trackere deconectate");
+define("MAIL_SUBJECT_TRACKERS_INACTIVE",    "Raport trackere conectate/deconectate");
 
 //navixy settings
 define("NX_DASHBOARD_ADMIN_URL",    "https://api.navixy.com/v2/panel/");
