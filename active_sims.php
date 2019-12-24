@@ -91,7 +91,7 @@ ob_start(); ?>
                                 <tr>
                                     <td align="left" valign="middle"
                                         style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 24px; color: #353535; padding:3%; padding-top:40px; padding-bottom:40px;">
-                                        <?php echo TRACKERS_PER_TARIF; ?>
+                                        <?php echo MAIL_SUBJECT_TRACKERS_PER_TARIF; ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -180,9 +180,9 @@ $mail->addReplyTo(MAIL_REPLY_TO, 'Information');
 //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
 $mail->isHTML(true);                                  // Set email format to HTML
 
-$mail->Subject = MAIL_SUBJECT_PF;
+$mail->Subject = MAIL_SUBJECT_TRACKERS_PER_TARIF;
 $mail->Body = $mail_body;
-$mail->AltBody = 'Total SMS trimise catre persoane fizice: ' . $sent_sms;
+$mail->AltBody = 'raport trackere per tarif';
 $end = microtime();
 
 
