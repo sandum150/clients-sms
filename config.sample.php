@@ -14,6 +14,7 @@ define("MAIL_SUBJECT_PF",           "SMS raport zilnic persoane fizice");
 define("MAIL_SUBJECT_PJ_01",        "Raport de suspendare lunar persoane juridice");
 define("MAIL_SUBJECT_PJ_1",         "Cont de plata raport lunar persoane juridice");
 define("MAIL_SUBJECT_PJ_2",         "Raport lunar persoane juridice restante");
+define("TRACKERS_PER_TARIF",        "Raport lunar Trackere active per tarif");
 
 //navixy settings
 define("NX_DASHBOARD_ADMIN_URL",    "https://api.navixy.com/v2/panel/");
