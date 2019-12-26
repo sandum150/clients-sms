@@ -6,10 +6,6 @@ require_once 'PHPMailer-master/PHPMailerAutoload.php';
 
 $daily = new ClientChecker();
 
-$tarrifs = $daily->getTariffList(true);
-$tarrifs_gsm = array_filter($tarrifs, function ($tarif) {
-    return strpos($tarif->name, 'gsm');
-});
 echo "Lista de tarife a fost obtinuta \n";
 
 $trackers = $daily->getTrackerList();

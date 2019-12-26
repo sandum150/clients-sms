@@ -10,9 +10,18 @@ $time_start = microtime(true);
 $navixy = new ClientChecker();
 
 $trackers = $navixy->getTrackerList();
+$tarrifs = $navixy->getTariffList(true);
 
-$trackers = array_filter($trackers, function ($tracker) {
-    return !$tracker->clone;
+$tarrifs_gsm = array_filter($tarrifs, function ($tarif) {
+    return strpos($tarif->name, 'gsm');
+});
+$gsm_tarifs_ids = [];
+foreach ($tarrifs_gsm as $tarif) {
+    $gsm_tarifs_ids[] = $tarif->id;
+}
+
+$trackers = array_filter($trackers, function ($tracker) use ($gsm_tarifs_ids) {
+    return !$tracker->clone && in_array($tracker->source->tariff_id, $gsm_tarifs_ids);
 });
 
 $last_month_statuses = $navixy->getAllTrackersStatuses();
@@ -315,7 +324,7 @@ $mail->Host = SMTP_SERVER;  // Specify main and backup SMTP servers
 $mail->SMTPAuth = true;                               // Enable SMTP authentication
 $mail->Username = SMTP_USERNAME;                 // SMTP username
 $mail->Password = SMTP_PASSWORD;                           // SMTP password
-$mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+$mail->SMTPSecure = 'TLS';                            // Enable TLS encryption, `ssl` also accepted
 $mail->Port = SMTP_PORT;                                    // TCP port to connect to
 
 $mail->setFrom(MAIL_FROM, MAIL_FROM_NAME);
