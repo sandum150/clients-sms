@@ -98,33 +98,47 @@ ob_start(); ?>
                                     <td align="center">
                                         <table width="94%" border="0" cellpadding="0" cellspacing="0" style="table-layout: fixed">
                                             <tr>
-                                                <td width="10%" align="left" bgcolor="#252525"
+                                                <td width="20%" align="left" bgcolor="#252525"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0;">
                                                     Denumire tarif
                                                 </td>
-                                                <td width="15%" align="left" bgcolor="#252525"
+                                                <td width="20%" align="left" bgcolor="#252525"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0;">
                                                     Total trackere
                                                 </td>
+                                                <td width="20%" align="left" bgcolor="#252525"
+                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #EEEEEE; padding:10px; padding-right:0;">
+                                                    Suma
+                                                </td>
                                             </tr>
-                                            <?php foreach ($tarrifs as $tarif): ?>
+                                            <?php
+                                            $suma_total = 0;
+                                            foreach ($tarrifs as $tarif):
+                                                $suma_per_tarif = count($active_trackers_per_tariff[$tarif->id]) * $tarif->price;
+                                            $suma_total += $suma_per_tarif;?>
                                                 <tr>
-                                                    <td width="10%" align="left" bgcolor="#FFFFFF"
+                                                    <td width="20%" align="left" bgcolor="#FFFFFF"
                                                         style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-right:0;">
                                                         <?php echo $tarif->name ; ?>
                                                     </td>
-                                                    <td width="10%" align="left" bgcolor="#FFFFFF"
+                                                    <td width="20%" align="left" bgcolor="#FFFFFF"
                                                         style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-right:0;">
                                                         <?php echo count($active_trackers_per_tariff[$tarif->id]); ?>
+                                                    </td>
+                                                    <td width="15%" align="left" bgcolor="#FFFFFF"
+                                                        style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-right:0;">
+                                                        <?php echo  $suma_per_tarif; ?>
                                                     </td>
 
                                                 </tr>
                                             <?php endforeach; ?>
                                             <tr>
-                                                <td width="20%" align="right" bgcolor="#FFFFFF"
+                                                <td width="10%" align="right" bgcolor="#FFFFFF"
+                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;"><b>Total:</b></td>
+                                                <td width="15%" align="right" bgcolor="#FFFFFF"
                                                     style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;"></td>
-                                                <td width="20%" align="right" bgcolor="#FFFFFF"
-                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;"></td>
+                                                <td width="15%" align="left" bgcolor="#FFFFFF"
+                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px;"><b><?php echo $suma_total; ?></b></td>
                                             </tr>
                                         </table>
                                     </td>
