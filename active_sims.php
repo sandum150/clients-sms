@@ -6,6 +6,7 @@ require_once 'PHPMailer-master/PHPMailerAutoload.php';
 
 $daily = new ClientChecker();
 
+$tarrifs = $daily->getTariffList(true);
 echo "Lista de tarife a fost obtinuta \n";
 
 $trackers = $daily->getTrackerList();
@@ -109,9 +110,12 @@ ob_start(); ?>
                                             </tr>
                                             <?php
                                             $suma_total = 0;
+                                            $total_trackers = 0;
                                             foreach ($tarrifs as $tarif):
                                                 $suma_per_tarif = count($active_trackers_per_tariff[$tarif->id]) * $tarif->price;
-                                            $suma_total += $suma_per_tarif;?>
+                                                $suma_total += $suma_per_tarif;
+                                                $total_trackers += count($active_trackers_per_tariff[$tarif->id]);
+                                                ?>
                                                 <tr>
                                                     <td width="20%" align="left" bgcolor="#FFFFFF"
                                                         style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-right:0;">
@@ -130,11 +134,15 @@ ob_start(); ?>
                                             <?php endforeach; ?>
                                             <tr>
                                                 <td width="10%" align="right" bgcolor="#FFFFFF"
-                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;"><b>Total:</b></td>
-                                                <td width="15%" align="right" bgcolor="#FFFFFF"
-                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;"></td>
+                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px; padding-left:0;">
+                                                    <b>Total:</b></td>
                                                 <td width="15%" align="left" bgcolor="#FFFFFF"
-                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px;"><b><?php echo $suma_total; ?></b></td>
+                                                    style="font-family: Verdana, Geneva, Helvetica, Arial,
+                                                    sans-serif; font-size: 12px; color: #252525; paddingsk:10px;">
+                                                    <b><?php echo $total_trackers ?></b></td>
+                                                <td width="15%" align="left" bgcolor="#FFFFFF"
+                                                    style="font-family: Verdana, Geneva, Helvetica, Arial, sans-serif; font-size: 12px; color: #252525; padding:10px;">
+                                                    <b><?php echo $suma_total; ?></b></td>
                                             </tr>
                                         </table>
                                     </td>

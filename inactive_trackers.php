@@ -33,7 +33,7 @@ foreach ($trackers as $tracker) {
     $found_status_index = array_search($tracker->id, array_column($last_month_statuses, 'tracker_id'));
 
 //    if not found index, this tracker is new. Then we add it
-    if ($found_status_index === false) {
+    if ($found_status_index === false && !$tracker->deleted) {
         $activated_trackers[$tracker->id] = [
             'user_id' => $tracker->user_id,
             'tracker_id' => $tracker->id,
@@ -324,7 +324,7 @@ $mail->Host = SMTP_SERVER;  // Specify main and backup SMTP servers
 $mail->SMTPAuth = true;                               // Enable SMTP authentication
 $mail->Username = SMTP_USERNAME;                 // SMTP username
 $mail->Password = SMTP_PASSWORD;                           // SMTP password
-$mail->SMTPSecure = 'TLS';                            // Enable TLS encryption, `ssl` also accepted
+$mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
 $mail->Port = SMTP_PORT;                                    // TCP port to connect to
 
 $mail->setFrom(MAIL_FROM, MAIL_FROM_NAME);
