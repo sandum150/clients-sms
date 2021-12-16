@@ -108,9 +108,14 @@ class ClientChecker{
     }
 
     public function getUsersList(){
-        $result = $this->curlRequest($this->admin_dashboard_api_url."user/list/");
-        $users = json_decode($result);
-        return $users->list;
+        try {
+            $result = $this->curlRequest($this->admin_dashboard_api_url."user/list/");
+            $users = json_decode($result);
+            return $users->list;
+        } catch (Exception $error) {
+            $this->errorLog('Could not get user list');
+            return null;
+        }
     }
 
     public function getUserSession($user_id){
@@ -120,9 +125,15 @@ class ClientChecker{
     }
 
     public function getTrackerList(){
-        $trackers = $this->curlRequest($this->admin_dashboard_api_url."tracker/list/");
-        $trackers = json_decode($trackers);
-        return $trackers->list;
+        try {
+            $trackers = $this->curlRequest($this->admin_dashboard_api_url."tracker/list/");
+            $trackers = json_decode($trackers);
+            return $trackers->list;
+        } catch (Exception $error) {
+            $this->errorLog('Could not get trackers');
+
+            return null;
+        }
     }
 
     public function getTariffList($allInfo = false){
